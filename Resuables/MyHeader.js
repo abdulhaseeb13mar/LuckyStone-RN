@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import {colors} from '../Resuables/frequentColors';
@@ -9,25 +10,45 @@ function MyHeader(props) {
   return (
     <View style={styles.HeaderBarWrapper}>
       <View style={styles.HeaderBarInnerWrapper}>
-        <TouchableOpacity
-          onPress={props.leftIconAction}
-          style={styles.IconWrap}>
-          <LeftIconLibrary
-            name={props.leftIconName}
-            size={Measurements.width * 0.065}
-            color={colors.primary}
+        {LeftIconLibrary ? (
+          <TouchableOpacity
+            onPress={props.leftIconAction}
+            style={styles.IconWrap}>
+            <LeftIconLibrary
+              name={props.leftIconName}
+              size={Measurements.width * 0.065}
+              color={colors.primary}
+            />
+          </TouchableOpacity>
+        ) : (
+          <View
+            style={{
+              ...styles.IconWrap,
+              elevation: 0,
+              backgroundColor: 'transparent',
+            }}
           />
-        </TouchableOpacity>
+        )}
         <Text style={styles.HeaderText}>{props.Title}</Text>
-        <TouchableOpacity
-          onPress={props.rightIconAction}
-          style={styles.IconWrap}>
-          <RightIconLibrary
-            name={props.rightIconName}
-            size={Measurements.width * 0.065}
-            color={colors.primary}
+        {RightIconLibrary ? (
+          <TouchableOpacity
+            onPress={props.rightIconAction}
+            style={styles.IconWrap}>
+            <RightIconLibrary
+              name={props.rightIconName}
+              size={Measurements.width * 0.065}
+              color={colors.primary}
+            />
+          </TouchableOpacity>
+        ) : (
+          <View
+            style={{
+              ...styles.IconWrap,
+              elevation: 0,
+              backgroundColor: 'transparent',
+            }}
           />
-        </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -66,7 +87,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: Measurements.height * 0.015,
+    marginVertical: Measurements.height * 0.018,
   },
 });
 

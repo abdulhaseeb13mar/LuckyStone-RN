@@ -14,6 +14,9 @@ function Looping(props) {
   return (
     <View style={{flex: 1}}>
       <FlatList
+        ListHeaderComponent={
+          props.ListHeaderComponent && props.ListHeaderComponent
+        }
         bounces={false}
         data={data}
         horizontal={horizontal}

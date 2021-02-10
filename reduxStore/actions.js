@@ -17,3 +17,21 @@ export const setUserInfoAction = (userInfo) => {
     });
   };
 };
+
+export const setFavAction = (favItem) => {
+  return async (dispatch) => {
+    dispatch({
+      type: ActionTypes.SET_FAVOURITE,
+      payload: favItem,
+    });
+  };
+};
+
+export const removeFavAction = (itemId) => {
+  return async (dispatch) => {
+    dispatch({
+      type: ActionTypes.REMOVE_FAVOURITE,
+      payload: itemId,
+    });
+  };
+};

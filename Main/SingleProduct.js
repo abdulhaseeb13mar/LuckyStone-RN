@@ -1,11 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
   ImageBackground,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
 } from 'react-native';
 import {Button} from 'react-native-elements';
@@ -15,27 +14,52 @@ import WrapperScreen from '../Resuables/WrapperScreen';
 import {connect} from 'react-redux';
 import Entypo from 'react-native-vector-icons/Entypo';
 import NavigationRef from '../Resuables/RefNavigation';
-import StarRating from '../starRating/index';
-import {setCurrentProductAction} from '../reduxStore/actions';
+import {
+  setCurrentProductAction,
+  setFavAction,
+  removeFavAction,
+} from '../reduxStore/actions';
 
 function Booking(props) {
-  const [noOfItem, setNoOfItem] = useState(1);
+  useEffect(() => {
+    checkIfFav();
+  }, []);
+
+  const [fav, setFav] = useState(false);
   const product = props.product;
 
+  const checkIfFav = () => {
+    for (let i = 0; i < props.favs.length; i++) {
+      if (props.favs[i].id === product.id) {
+        setFav(true);
+        break;
+      }
+    }
+  };
+
   const proceedToBookings = () => {
-    props.setCurrentProductAction({...product, quantity: noOfItem});
+    props.setCurrentProductAction({...product});
     NavigationRef.Navigate('PersonalInfo');
   };
 
+  const toggleFav = () => {
+    fav ? props.removeFavAction(product.id) : props.setFavAction(product);
+    setFav(!fav);
+  };
   const goBack = () => NavigationRef.GoBack();
-  const increaseItem = () => setNoOfItem(noOfItem + 1);
-  const decreaseItem = () => noOfItem !== 1 && setNoOfItem(noOfItem - 1);
 
   return (
-    <WrapperScreen style={{backgroundColor: colors.secondary}}>
+    <WrapperScreen style={{backgroundColor: colors.lightBackground2}}>
       <View style={styles.pt_imgBackWrapper}>
         <TouchableOpacity style={styles.crossWrapper} onPress={goBack}>
           <Entypo name="cross" size={Measurements.width * 0.07} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.hearWrapper} onPress={toggleFav}>
+          <Entypo
+            name={fav ? 'heart' : 'heart-outlined'}
+            size={Measurements.width * 0.07}
+            color={colors.primary}
+          />
         </TouchableOpacity>
         <ImageBackground
           source={product.images}
@@ -46,43 +70,23 @@ function Booking(props) {
       </View>
       <View style={styles.PD_1}>
         <View style={styles.detailWrapper}>
-          <View style={styles.PD_2} />
-          <View style={styles.PD_3}>
-            <View>
+          <View style={styles.PD_2}>
+            <View style={styles.PD_3}>
               <Text style={styles.PD_4}>{product.productName}</Text>
-              <View style={styles.PD_5}>
-                <StarRating
-                  rating={product.raiting}
-                  size={Measurements.width * 0.25}
-                />
-                <Text style={styles.PD_6}>{product.raiting}</Text>
-              </View>
+              <Text style={styles.PD_5}>${product.price}</Text>
             </View>
-            <View style={styles.PD_7}>
-              <TouchableOpacity onPress={decreaseItem} style={styles.PD_8}>
-                <Entypo name="minus" color="white" size={20} />
-              </TouchableOpacity>
-              <Text style={styles.PD_9}>{noOfItem}</Text>
-              <TouchableOpacity onPress={increaseItem} style={styles.PD_10}>
-                <Entypo name="plus" color="white" size={20} />
-              </TouchableOpacity>
-            </View>
+            <Text style={styles.PD_6}>{product.address}</Text>
           </View>
-          <Text style={styles.PD_11}>{product.discription}</Text>
+          <Text style={styles.PD_11}>{product.dis}</Text>
           <View style={styles.PD_12}>
-            <View style={styles.PD_13}>
-              <Text style={styles.PD_14}>${product.price}/</Text>
-              <Text style={styles.PD_15}>Price</Text>
-            </View>
-            <View>
-              <Button
-                raised
-                title="SHOP NOW"
-                buttonStyle={styles.confirmButton}
-                titleStyle={styles.buttonText}
-                onPress={proceedToBookings}
-              />
-            </View>
+            <Button
+              raised
+              title="PURCHASE NOW"
+              buttonStyle={styles.confirmButton}
+              containerStyle={{width: '100%'}}
+              titleStyle={styles.buttonText}
+              onPress={proceedToBookings}
+            />
           </View>
         </View>
       </View>
@@ -93,112 +97,102 @@ function Booking(props) {
 const mapStateToProps = (state) => {
   return {
     product: state.currentProductReducer,
+    favs: state.favouritesReducer,
   };
 };
 
-export default connect(mapStateToProps, {setCurrentProductAction})(
-  React.memo(Booking),
-);
-
+export default connect(mapStateToProps, {
+  setCurrentProductAction,
+  setFavAction,
+  removeFavAction,
+})(React.memo(Booking));
+const border = {
+  // borderColor: 'red',
+  // borderWidth: 1,
+};
 const styles = StyleSheet.create({
-  PD_15: {
-    alignSelf: 'flex-end',
-    color: colors.lightGrey3,
-    fontWeight: 'bold',
-    fontSize: Measurements.width * 0.035,
-  },
-  PD_14: {
-    fontSize: Measurements.width * 0.065,
-    color: colors.secondary,
-    fontWeight: 'bold',
-  },
-  PD_13: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   PD_12: {
-    width: '100%',
+    width: '90%',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
   },
   PD_11: {
-    width: '100%',
+    width: '90%',
     fontSize: Measurements.width * 0.04,
-    lineHeight: Measurements.height * 0.03,
+    lineHeight: Measurements.height * 0.035,
     fontWeight: 'bold',
     textAlignVertical: 'center',
-    color: colors.lightGrey3,
+    color: colors.primary,
+    borderRadius: 15,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    backgroundColor: colors.secondary,
+    paddingHorizontal: Measurements.width * 0.02,
+    paddingVertical: Measurements.height * 0.007,
   },
-  PD_10: {
-    backgroundColor: 'rgba(255,255,255,0.3)',
-    borderRadius: 5,
-  },
-  PD_9: {
-    fontSize: Measurements.width * 0.05,
-    fontWeight: 'bold',
-    color: colors.secondary,
-  },
-  PD_8: {
-    backgroundColor: 'rgba(255,255,255,0.3)',
-    borderRadius: 5,
-  },
-  PD_7: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: Measurements.width * 0.3,
-    paddingHorizontal: Measurements.width * 0.04,
-    borderRadius: 50,
-    backgroundColor: 'rgba(255,255,255,0.3)',
-    height: 40,
-  },
+  PD_10: {},
+  PD_9: {},
+  PD_8: {},
+  PD_7: {},
   PD_6: {
-    marginLeft: Measurements.width * 0.045,
-    color: colors.secondary,
-    fontSize: Measurements.width * 0.045,
+    marginTop: Measurements.height * 0.01,
+    color: colors.primary,
+    fontSize: Measurements.width * 0.038,
     fontWeight: 'bold',
+    opacity: 0.6,
   },
   PD_5: {
-    width: Measurements.width * 0.55,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    fontSize: Measurements.width * 0.055,
+    fontWeight: 'bold',
+    color: colors.primary,
   },
   PD_4: {
-    color: colors.secondary,
-    fontSize: Measurements.width * 0.05,
+    fontSize: Measurements.width * 0.055,
     fontWeight: 'bold',
-    width: Measurements.width * 0.55,
+    color: colors.primary,
+    width: '65%',
   },
   PD_3: {
-    width: '100%',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
   PD_2: {
-    width: Measurements.width * 0.25,
-    height: Measurements.width * 0.0095,
     backgroundColor: 'white',
-    opacity: 0.5,
+    width: '95%',
+    borderRadius: 12,
+    padding: Measurements.width * 0.047,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    marginTop: -Measurements.height * 0.04,
   },
   PD_1: {
-    borderTopLeftRadius: 35,
-    borderTopRightRadius: 35,
-    backgroundColor: colors.primary,
-    height: Measurements.height * 0.45 + 44,
+    position: 'relative',
+    height: '50%',
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    ...border,
   },
-  buttonText: {fontWeight: 'bold', color: colors.primary},
+  buttonText: {fontWeight: 'bold', color: colors.secondary},
   confirmButton: {
-    width: Measurements.width * 0.52,
     paddingVertical: Measurements.height * 0.017,
-    backgroundColor: colors.secondary,
-    borderRadius: 50,
+    backgroundColor: colors.primary,
+    borderRadius: 15,
   },
   crossWrapper: {
     position: 'absolute',
@@ -208,24 +202,32 @@ const styles = StyleSheet.create({
     top: Measurements.height * 0.023,
     right: Measurements.width * 0.05,
   },
-
+  hearWrapper: {
+    position: 'absolute',
+    padding: Measurements.width * 0.002,
+    backgroundColor: 'white',
+    borderRadius: 7,
+    top: Measurements.height * 0.023,
+    left: Measurements.width * 0.05,
+  },
   detailWrapper: {
-    height: Measurements.height * 0.45,
+    height: '90%',
     paddingHorizontal: Measurements.width * 0.045,
-    paddingVertical: Measurements.height * 0.02,
-    backgroundColor: colors.primary,
-    borderTopLeftRadius: 35,
-    borderTopRightRadius: 35,
+    paddingBottom: Measurements.height * 0.02,
+    backgroundColor: colors.secondary,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginTop: '10%',
   },
   pt_imgBackWrapper: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    height: Measurements.height * 0.55 - 22,
+    height: '50%',
   },
   pt_imageBackground: {
     width: '90%',

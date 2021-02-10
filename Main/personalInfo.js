@@ -143,7 +143,7 @@ const ConfirmOrder = (props) => {
   const goBack = () => NavigationRef.GoBack();
 
   return (
-    <WrapperScreen style={{backgroundColor: colors.blueGray}}>
+    <WrapperScreen style={{backgroundColor: colors.lightBackground2}}>
       <KeyboardAwareScrollView style={styles.container}>
         <View style={styles.headerWrapper}>
           <TouchableOpacity onPress={goBack}>
@@ -166,9 +166,6 @@ const ConfirmOrder = (props) => {
               <Text style={styles.ProductName}>{product.productName}</Text>
               <View style={styles.detailInner2}>
                 <Text style={styles.detailprice}>${product.price}</Text>
-                <Text style={styles.detailsize}>
-                  Quantity: {product.quantity}
-                </Text>
               </View>
             </View>
           </View>
@@ -336,11 +333,6 @@ export default connect(mapStateToProps, {setUserInfoAction})(
 );
 
 const styles = StyleSheet.create({
-  detailsize: {
-    color: colors.lightGrey3,
-    fontSize: 15,
-    fontWeight: '700',
-  },
   detailprice: {
     color: colors.lightGrey3,
     fontSize: 15,
@@ -449,7 +441,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginVertical: Measurements.height * 0.01,
-    backgroundColor: colors.blueGray,
+    backgroundColor: colors.primary,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -460,7 +452,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   ProductName: {
-    color: colors.primary,
+    color: colors.secondary,
     fontSize: 18,
     fontWeight: 'bold',
     width: Measurements.width * 0.35,

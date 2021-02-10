@@ -9,7 +9,7 @@ import Data from '../dummyData';
 import {Measurements} from '../Resuables/Measurement';
 import {colors} from '../Resuables/frequentColors';
 import NavigationRef from '../Resuables/RefNavigation';
-import {ExploreTile} from './Explore';
+import {FilteredTile} from './Home';
 import {connect} from 'react-redux';
 import {setCurrentProductAction} from '../reduxStore/actions';
 
@@ -21,7 +21,7 @@ function Search(props) {
       item.productName.toLowerCase().includes(searchText.toLowerCase()),
     );
     return SearchedItems.length === 0 ? (
-      <Text style={{fontWeight: 'bold'}}>No Lamps Found...</Text>
+      <Text style={{fontWeight: 'bold'}}>No Stones Found...</Text>
     ) : (
       RenderTiles(SearchedItems)
     );
@@ -29,7 +29,7 @@ function Search(props) {
 
   const RenderTiles = (Arr) => {
     return Arr.map((item) => (
-      <ExploreTile
+      <FilteredTile
         key={item.id}
         item={item}
         GoToSingleProduct={GoToSingleProduct}
@@ -46,7 +46,7 @@ function Search(props) {
 
   const changeSearchText = (t) => setSearchText(t);
   return (
-    <WrapperScreen style={{backgroundColor: 'white'}}>
+    <WrapperScreen style={{backgroundColor: colors.lightGrey4}}>
       <KeyboardAwareScrollView style={styles.container}>
         <View style={styles.headerWrapper}>
           <TouchableOpacity onPress={goBack}>
@@ -60,7 +60,7 @@ function Search(props) {
         <View style={styles.SearchBarWrapper}>
           <SearchBar changeSearchText={changeSearchText} />
         </View>
-        <View style={styles.PaintingTilesWrapper}>
+        <View style={styles.TilesWrapper}>
           {searchText !== '' ? RenderSearchedResult() : null}
         </View>
       </KeyboardAwareScrollView>
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Measurements.width * 0.03,
     paddingVertical: Measurements.height * 0.018,
   },
-  PaintingTilesWrapper: {
+  TilesWrapper: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-evenly',

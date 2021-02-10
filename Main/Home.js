@@ -6,188 +6,239 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
-  ImageBackground,
 } from 'react-native';
 import WrapperScreen from '../Resuables/WrapperScreen';
 import {colors} from '../Resuables/frequentColors';
 import {Measurements} from '../Resuables/Measurement';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import {Avatar} from 'react-native-elements';
 import Data from '../dummyData';
 import Loop from '../Resuables/looping';
-import MyHeader from '../Resuables/MyHeader';
 import Entypo from 'react-native-vector-icons/Entypo';
 import RefNavigation from '../Resuables/RefNavigation';
 import {connect} from 'react-redux';
 import {setCurrentProductAction} from '../reduxStore/actions';
+import Image from 'react-native-fast-image';
+import Icon from '../pics/icon.jpg';
+import SearchBar from '../Resuables/searchingBar';
 
 function Home(props) {
   useEffect(() => {
-    setNewArrival();
-    setSuggested();
+    changeTab(Data.catagory[0]);
   }, []);
-  const [NewCategory, setNewCategory] = useState([]);
-  const [suggestedCategory, setSuggestedCategory] = useState([]);
+  const [categories, setCategories] = useState(Data.catagory);
+  const [currentCat, setCurrentCat] = useState(Data.catagory[0]);
+  const [tabProducts, setTabProducts] = useState([]);
 
-  const setNewArrival = () => {
-    const newArrival = Data.product.filter((item) => item.categoryId === '1');
-    setNewCategory(newArrival);
-  };
-  const setSuggested = () => {
-    const suggested = Data.product.filter((item) => item.categoryId === '2');
-    setSuggestedCategory(suggested);
+  const changeTab = (tab) => {
+    setCurrentCat(tab);
+    const filteredProducts = Data.product.filter(
+      (item) => item.catagoryId === tab.id,
+    );
+    setTabProducts(filteredProducts);
   };
 
-  const GoToExplore = () => RefNavigation.Navigate('Explore');
-  const GotoSearch = () => RefNavigation.Navigate('SearchLamps');
+  const GotoSearch = () => RefNavigation.Navigate('SearchStones');
+  const GoToFavourites = () => RefNavigation.Navigate('Favourite');
   const GoToSingleProduct = (item) => {
     props.setCurrentProductAction(item);
     RefNavigation.Navigate('SingleProduct');
   };
   return (
-    <WrapperScreen style={{backgroundColor: colors.secondary}}>
+    <WrapperScreen style={{backgroundColor: colors.lightGrey4}}>
       <ScrollView bounces={false} style={{flex: 1}}>
-        <MyHeader
-          leftIcon={Entypo}
-          rightIcon={Entypo}
-          Title="LAMP"
-          leftIconName="dots-three-horizontal"
-          rightIconName="magnifying-glass"
-          leftIconAction={GoToExplore}
-          rightIconAction={GotoSearch}
-        />
+        <View style={styles.H_1}>
+          <TouchableOpacity onPress={GoToFavourites}>
+            <Entypo
+              name="heart-outlined"
+              color={colors.primary}
+              size={Measurements.height * 0.035}
+            />
+          </TouchableOpacity>
+          <View style={{width: '70%'}}>
+            <Text style={styles.H_2}>Location</Text>
+            <Text style={styles.H_3}>San Francisco CA 94133</Text>
+          </View>
+          <View>
+            <Avatar rounded size={Measurements.height * 0.05} source={Icon} />
+          </View>
+        </View>
+        <TouchableOpacity style={styles.SearchBarWrapper} onPress={GotoSearch}>
+          <SearchBar editable={false} />
+        </TouchableOpacity>
+        <View style={styles.listingWrapper}>
+          <Loop
+            data={categories}
+            renderItem={({item}) => (
+              <Tabs item={item} currentCat={currentCat} changeTab={changeTab} />
+            )}
+          />
+        </View>
+        <View style={styles.divider}>
+          <View style={styles.divider2} />
+        </View>
         <View style={{marginVertical: Measurements.height * 0.015}}>
-          {NewCategory.length > 0 && (
+          {tabProducts.length > 0 && (
             <Loop
-              data={NewCategory}
+              horizontal={false}
+              data={tabProducts}
               renderItem={({item}) => (
-                <LandingTile
+                <FilteredTile
                   item={item}
                   GoToSingleProduct={GoToSingleProduct}
                 />
               )}
             />
           )}
-          <View style={styles.divider}>
-            <View style={styles.divider2} />
-          </View>
-        </View>
-        <View
-          style={{
-            ...styles.SG_1,
-            backgroundColor: suggestedCategory.length > 0 && colors.primary,
-          }}>
-          <Text style={styles.SG_2}>Suggest For you</Text>
-          <View>
-            {suggestedCategory.length > 0 && (
-              <Loop
-                data={suggestedCategory}
-                renderItem={({item}) => (
-                  <SuggestedTile
-                    item={item}
-                    GoToSingleProduct={GoToSingleProduct}
-                  />
-                )}
-              />
-            )}
-          </View>
         </View>
       </ScrollView>
     </WrapperScreen>
   );
 }
 
-const LandingTile = ({item, GoToSingleProduct}) => {
+const Tabs = ({item, currentCat, changeTab}) => {
   return (
     <TouchableOpacity
-      onPress={() => GoToSingleProduct(item)}
-      style={styles.LT_1}>
-      <ImageBackground
-        source={item.images}
-        style={styles.LT_2}
-        resizeMode="center"
-      />
-      <View style={styles.LT_3}>
-        <Text style={styles.LT_4}>{item.productName}</Text>
-        <Text style={styles.LT_5}>${item.price}</Text>
-      </View>
-      <View style={styles.ratingView}>
-        <AntDesign
-          name="star"
-          color="#ffce33"
-          size={Measurements.width * 0.04}
+      style={styles.HomeTabsWrapper}
+      onPress={() => changeTab(item)}>
+      <View
+        style={{
+          ...styles.tab1,
+          backgroundColor:
+            item.catagoryName === currentCat.catagoryName
+              ? colors.primary
+              : colors.secondary,
+        }}>
+        <Image
+          source={
+            item.catagoryName === currentCat.catagoryName
+              ? item.iconsW
+              : item.iconsG
+          }
+          style={styles.tab2}
         />
-        <Text style={{...styles.ratingText, fontWeight: 'bold'}}>
-          {item.raiting}
-        </Text>
       </View>
+      <Text
+        style={{
+          ...styles.HomeTabsText,
+          color:
+            item.catagoryName === currentCat.catagoryName
+              ? colors.primary
+              : colors.primary,
+          opacity: item.catagoryName === currentCat.catagoryName ? 1 : 0.6,
+          fontSize:
+            item.catagoryName === currentCat.catagoryName
+              ? Measurements.width * 0.045
+              : Measurements.width * 0.04,
+        }}>
+        {item.catagoryName}
+      </Text>
     </TouchableOpacity>
   );
 };
 
-const SuggestedTile = ({item, GoToSingleProduct}) => {
+export const FilteredTile = ({item, GoToSingleProduct}) => {
   return (
     <TouchableOpacity
       onPress={() => GoToSingleProduct(item)}
-      style={styles.ST_1}>
-      <ImageBackground
-        source={item.images}
-        style={styles.ST_2}
-        resizeMode="center"
-      />
-      <View style={styles.ST_3}>
-        <Text style={styles.ST_4}>{item.productName}</Text>
-        <View style={styles.ST_5}>
-          <Text style={styles.ST_6}>${item.price}</Text>
-          <View style={styles.ratingView}>
-            <AntDesign
-              name="star"
-              color="#ffce33"
-              size={Measurements.width * 0.04}
-            />
-            <Text style={styles.ratingText}>{item.raiting}</Text>
-          </View>
+      style={styles.FT_1}>
+      <View style={styles.FT_2}>
+        <View style={styles.FT_3}>
+          <Text style={styles.FT_4}>{item.productName}</Text>
+          <Text style={styles.FT_5}>{item.address}</Text>
         </View>
+        <Text style={styles.FT_6}>${item.price}</Text>
+      </View>
+      <View style={styles.FT_7}>
+        <Image source={item.images} style={styles.FT_8} resizeMode="center" />
       </View>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  ST_6: {
-    fontSize: Measurements.width * 0.036,
-    color: colors.darkGray,
+  FT_8: {
+    width: Measurements.width * 0.27,
+    height: Measurements.height * 0.158,
   },
-  ST_5: {
-    width: '100%',
+  FT_7: {
+    backgroundColor: colors.lightBackground2,
+    borderRadius: 11,
+    position: 'absolute',
+    height: '100%',
+    width: Measurements.width * 0.33,
     display: 'flex',
-    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 5,
+    justifyContent: 'center',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
   },
-  ST_4: {
-    width: '100%',
+  FT_6: {
+    color: colors.primary,
+    fontSize: Measurements.width * 0.048,
+    fontWeight: 'bold',
+  },
+  FT_5: {
+    width: Measurements.width * 0.5,
+    color: colors.primary,
     fontSize: Measurements.width * 0.038,
     fontWeight: 'bold',
+    opacity: 0.6,
+    marginVertical: Measurements.height * 0.015,
+  },
+  FT_4: {
+    width: Measurements.width * 0.5,
     color: colors.primary,
+    fontSize: 22,
+    fontWeight: 'bold',
+    fontFamily: 'Didot-Bold',
   },
-  ST_3: {
-    width: '100%',
-    marginTop: 5,
-  },
-  ST_2: {
-    width: Measurements.width * 0.3,
+  FT_3: {
+    width: Measurements.width * 0.5,
+    minHeight: Measurements.height * 0.15,
     height: Measurements.height * 0.15,
-  },
-  ST_1: {
-    padding: Measurements.width * 0.028,
-    width: Measurements.width * 0.4,
-    marginHorizontal: Measurements.width * 0.02,
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
-    backgroundColor: 'white',
-    borderRadius: 18,
+  },
+  FT_2: {
+    borderRadius: 11,
+    backgroundColor: colors.secondary,
+    display: 'flex',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-start',
+    paddingBottom: Measurements.width * 0.03,
+    paddingRight: Measurements.width * 0.03,
+    paddingTop: Measurements.height * 0.02,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+  },
+  FT_1: {
+    width: Measurements.width * 0.91,
+    height: Measurements.height * 0.25,
+    paddingVertical: Measurements.width * 0.04,
+    paddingLeft: Measurements.width * 0.05,
+    position: 'relative',
+    marginTop: Measurements.width * 0.05,
+  },
+  tab2: {
+    width: Measurements.width * 0.15,
+    height: Measurements.width * 0.15,
+  },
+  tab1: {
+    padding: Measurements.width * 0.02,
+    borderRadius: 15,
     elevation: 3,
     shadowColor: '#000',
     shadowOffset: {
@@ -197,64 +248,52 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
   },
-  LT_5: {
-    width: '30%',
-    textAlign: 'right',
-    fontSize: Measurements.width * 0.05,
-    fontWeight: '700',
+  H_3: {
+    textAlign: 'center',
     color: colors.primary,
-  },
-  LT_4: {
-    width: '70%',
-    fontSize: Measurements.width * 0.05,
     fontWeight: 'bold',
-    color: colors.primary,
+    fontSize: 16,
   },
-  LT_3: {
+  H_2: {
+    textAlign: 'center',
+    color: colors.primary,
+    opacity: 0.6,
+    fontWeight: 'bold',
+  },
+  H_1: {
     width: '100%',
+    backgroundColor: 'white',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 7,
-  },
-  LT_2: {
-    width: Measurements.width * 0.55,
-    height: Measurements.height * 0.3,
-  },
-  LT_1: {
-    borderColor: colors.lightGrey2,
-    borderWidth: 1.5,
-    padding: Measurements.width * 0.028,
-    width: Measurements.width * 0.8,
-    marginHorizontal: Measurements.width * 0.1,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
-    borderRadius: 18,
-    elevation: 3,
+    paddingHorizontal: Measurements.width * 0.06,
+    paddingVertical: Measurements.height * 0.02,
+    elevation: 2,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 1,
     },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
   },
-  SG_2: {
-    marginVertical: Measurements.height * 0.018,
-    color: colors.lightGrey2,
+  SearchBarWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: Measurements.height * 0.003,
+  },
+  HomeTabsText: {
     fontWeight: 'bold',
-    fontSize: 15,
   },
-  SG_1: {
-    marginTop: Measurements.height * 0.02,
-    borderTopLeftRadius: 22,
-    borderTopRightRadius: 22,
-
-    paddingBottom: Measurements.height * 0.052,
-    paddingLeft: Measurements.width * 0.06,
+  HomeTabsWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    margin: Measurements.width * 0.03,
+    paddingHorizontal: Measurements.width * 0.02,
+    paddingTop: Measurements.width * 0.02,
   },
   divider2: {
     borderColor: colors.lightGrey3,
@@ -262,18 +301,6 @@ const styles = StyleSheet.create({
     width: '60%',
   },
   divider: {display: 'flex', alignItems: 'center', marginTop: 5},
-  ratingView: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    alignSelf: 'flex-start',
-  },
-  ratingText: {
-    fontSize: Measurements.width * 0.036,
-    marginLeft: Measurements.width * 0.015,
-    color: colors.primary,
-  },
 });
 
 export default connect(null, {setCurrentProductAction})(Home);

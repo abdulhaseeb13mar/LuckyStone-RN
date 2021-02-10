@@ -24,7 +24,8 @@ export default function SearchBar(props) {
       </View>
       <TextInput
         style={styles.SB_input}
-        placeholder="Search Lamps..."
+        editable={props.editable && props.editable}
+        placeholder="Search Stones..."
         onBlur={() => ChangeFocus(false)}
         onFocus={() => ChangeFocus(true)}
         onChangeText={onChangeText}
