@@ -6,6 +6,7 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
+  ImageBackground,
 } from 'react-native';
 import WrapperScreen from '../Resuables/WrapperScreen';
 import {colors} from '../Resuables/frequentColors';
@@ -149,7 +150,11 @@ export const FilteredTile = ({item, GoToSingleProduct}) => {
         <Text style={styles.FT_6}>${item.price}</Text>
       </View>
       <View style={styles.FT_7}>
-        <Image source={item.images} style={styles.FT_8} resizeMode="center" />
+        <ImageBackground
+          source={item.images}
+          style={styles.FT_8}
+          resizeMode="contain"
+        />
       </View>
     </TouchableOpacity>
   );
