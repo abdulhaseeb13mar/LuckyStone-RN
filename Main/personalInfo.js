@@ -155,7 +155,9 @@ const ConfirmOrder = (props) => {
           </TouchableOpacity>
         </View>
         <View style={styles.bookingDetailsCenterOverlay}>
-          <View style={styles.bookingDetailsWrapper}>
+          <TouchableOpacity
+            onPress={goBack}
+            style={styles.bookingDetailsWrapper}>
             <ImageBackground
               source={product.images}
               style={styles.TileImage}
@@ -168,7 +170,7 @@ const ConfirmOrder = (props) => {
                 <Text style={styles.detailprice}>${product.price}</Text>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.personalInfoWrapper}>
           <Text style={styles.personalInfoHeader}>Contact Info</Text>
@@ -408,6 +410,7 @@ const styles = StyleSheet.create({
   personalInfoHeadingName: {
     fontSize: 13,
     fontWeight: 'bold',
+    marginVertical: 6,
   },
   singlePersonalInfoWrapper: {
     marginVertical: 10,

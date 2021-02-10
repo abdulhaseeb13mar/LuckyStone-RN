@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import WrapperScreen from '../Resuables/WrapperScreen';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -14,6 +14,9 @@ import {connect} from 'react-redux';
 import {setCurrentProductAction} from '../reduxStore/actions';
 
 function Search(props) {
+  useEffect(() => {
+    // RenderTiles(Data.catagory);
+  }, []);
   const [searchText, setSearchText] = useState('');
 
   const RenderSearchedResult = () => {
@@ -61,7 +64,9 @@ function Search(props) {
           <SearchBar changeSearchText={changeSearchText} />
         </View>
         <View style={styles.TilesWrapper}>
-          {searchText !== '' ? RenderSearchedResult() : null}
+          {searchText !== ''
+            ? RenderSearchedResult()
+            : RenderTiles(Data.product)}
         </View>
       </KeyboardAwareScrollView>
     </WrapperScreen>

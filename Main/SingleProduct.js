@@ -13,6 +13,7 @@ import {colors} from '../Resuables/frequentColors';
 import WrapperScreen from '../Resuables/WrapperScreen';
 import {connect} from 'react-redux';
 import Entypo from 'react-native-vector-icons/Entypo';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import NavigationRef from '../Resuables/RefNavigation';
 import {
   setCurrentProductAction,
@@ -52,7 +53,11 @@ function Booking(props) {
     <WrapperScreen style={{backgroundColor: colors.lightBackground2}}>
       <View style={styles.pt_imgBackWrapper}>
         <TouchableOpacity style={styles.crossWrapper} onPress={goBack}>
-          <Entypo name="cross" size={Measurements.width * 0.07} color="black" />
+          <AntDesign
+            name="arrowleft"
+            color="black"
+            size={Measurements.width * 0.07}
+          />
         </TouchableOpacity>
         <TouchableOpacity style={styles.hearWrapper} onPress={toggleFav}>
           <Entypo
@@ -106,10 +111,7 @@ export default connect(mapStateToProps, {
   setFavAction,
   removeFavAction,
 })(React.memo(Booking));
-const border = {
-  // borderColor: 'red',
-  // borderWidth: 1,
-};
+
 const styles = StyleSheet.create({
   PD_12: {
     width: '90%',
@@ -186,7 +188,6 @@ const styles = StyleSheet.create({
     height: '50%',
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    ...border,
   },
   buttonText: {fontWeight: 'bold', color: colors.secondary},
   confirmButton: {
@@ -200,7 +201,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 7,
     top: Measurements.height * 0.023,
-    right: Measurements.width * 0.05,
+    left: Measurements.width * 0.05,
+    zIndex: 5,
   },
   hearWrapper: {
     position: 'absolute',
@@ -208,7 +210,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 7,
     top: Measurements.height * 0.023,
-    left: Measurements.width * 0.05,
+    right: Measurements.width * 0.05,
+    zIndex: 5,
   },
   detailWrapper: {
     height: '90%',
