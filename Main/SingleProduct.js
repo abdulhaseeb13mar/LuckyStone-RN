@@ -51,7 +51,8 @@ function Booking(props) {
   const goBack = () => NavigationRef.GoBack();
 
   return (
-    <WrapperScreen style={{backgroundColor: colors.lightBackground2}}>
+    <WrapperScreen
+      style={{backgroundColor: `rgba(${colors.rgb_primary}, 0.3)`}}>
       <ScrollView>
         <View style={styles.pt_imgBackWrapper}>
           <TouchableOpacity style={styles.crossWrapper} onPress={goBack}>
