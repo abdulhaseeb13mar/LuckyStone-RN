@@ -11,7 +11,7 @@ import {
 import {connect} from 'react-redux';
 import WrapperScreen from '../Resuables/WrapperScreen';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Entypo from 'react-native-vector-icons/Entypo';
 import {Measurements} from '../Resuables/Measurement';
 import {colors} from '../Resuables/frequentColors';
 import {Button, Overlay} from 'react-native-elements';
@@ -25,8 +25,6 @@ import Toast from 'react-native-root-toast';
 const ConfirmOrder = (props) => {
   const [firstName, setFirstName] = useState('');
   const [firstNameErrMsg, setFirstNameErrMsg] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [lastNameErrMsg, setLastNameErrMsg] = useState('');
   const [email, setEmail] = useState('');
   const [emailErrMsg, setEmailErrMsg] = useState('');
   const [phone, setPhone] = useState('');
@@ -38,20 +36,13 @@ const ConfirmOrder = (props) => {
   const product = props.product;
 
   const Hire = () => {
-    const formValidResponse = isFormValid(
-      firstName,
-      lastName,
-      email,
-      phone,
-      address,
-    );
+    const formValidResponse = isFormValid(firstName, email, phone, address);
     if (!formValidResponse.status) {
       errorMsgHandler(formValidResponse.errCategory, formValidResponse.errMsg);
     } else {
       CallApi();
       setUserInfoAction({
         firstName: firstName,
-        lastName: lastName,
         email: email,
         phone: phone,
         address: address,
@@ -80,7 +71,6 @@ const ConfirmOrder = (props) => {
           },
           body: JSON.stringify({
             firstname: firstName,
-            lastname: lastName,
             phonenumber: phone,
             address: address,
             email: email,
@@ -100,32 +90,22 @@ const ConfirmOrder = (props) => {
     if (errCategory === 'email') {
       setEmailErrMsg(errMsg);
       setFirstNameErrMsg('');
-      setLastNameErrMsg('');
       setPhoneErrMsg('');
       setAddressErrMsg('');
     } else if (errCategory === 'firstname') {
       setFirstNameErrMsg(errMsg);
-      setLastNameErrMsg('');
       setEmailErrMsg('');
-      setPhoneErrMsg('');
-      setAddressErrMsg('');
-    } else if (errCategory === 'lastname') {
-      setLastNameErrMsg(errMsg);
-      setEmailErrMsg('');
-      setFirstNameErrMsg('');
       setPhoneErrMsg('');
       setAddressErrMsg('');
     } else if (errCategory === 'phone') {
       setPhoneErrMsg(errMsg);
       setFirstNameErrMsg('');
-      setLastNameErrMsg('');
       setEmailErrMsg('');
       setAddressErrMsg('');
     } else if (errCategory === 'address') {
       setAddressErrMsg(errMsg);
       setPhoneErrMsg('');
       setFirstNameErrMsg('');
-      setLastNameErrMsg('');
       setEmailErrMsg('');
     }
   };
@@ -136,7 +116,6 @@ const ConfirmOrder = (props) => {
   };
 
   const changeFirstName = (t) => setFirstName(t);
-  const changeLastName = (t) => setLastName(t);
   const changeEmail = (t) => setEmail(t);
   const changePhone = (t) => setPhone(t);
   const changeAddress = (t) => setAddress(t);
@@ -154,26 +133,9 @@ const ConfirmOrder = (props) => {
             />
           </TouchableOpacity>
         </View>
-        <View style={styles.bookingDetailsCenterOverlay}>
-          <TouchableOpacity
-            onPress={goBack}
-            style={styles.bookingDetailsWrapper}>
-            <ImageBackground
-              source={product.images}
-              style={styles.TileImage}
-              imageStyle={{borderRadius: 10}}
-              resizeMode="contain"
-            />
-            <View style={styles.DetailWrapper}>
-              <Text style={styles.ProductName}>{product.productName}</Text>
-              <View style={styles.detailInner2}>
-                <Text style={styles.detailprice}>${product.price}</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        </View>
+
         <View style={styles.personalInfoWrapper}>
-          <Text style={styles.personalInfoHeader}>Contact Info</Text>
+          <Text style={styles.personalInfoHeader}>Your Information</Text>
         </View>
         <View style={styles.PersonalInfoWrapper}>
           <View style={styles.singlePersonalInfoWrapper}>
@@ -182,7 +144,7 @@ const ConfirmOrder = (props) => {
                 ...styles.personalInfoHeadingName,
                 color: firstNameErrMsg ? 'red' : colors.primary,
               }}>
-              FIRST NAME <Text> {firstNameErrMsg}</Text>
+              YOUR NAME <Text> {firstNameErrMsg}</Text>
             </Text>
             <View style={styles.personalInfoInputWrapper}>
               <Feather
@@ -191,30 +153,9 @@ const ConfirmOrder = (props) => {
                 style={styles.inputIcon}
               />
               <TextInput
-                placeholder="First Name"
+                placeholder="Your Name"
                 style={styles.Input}
                 onChangeText={changeFirstName}
-              />
-            </View>
-          </View>
-          <View style={styles.singlePersonalInfoWrapper}>
-            <Text
-              style={{
-                ...styles.personalInfoHeadingName,
-                color: lastNameErrMsg ? 'red' : colors.primary,
-              }}>
-              LAST NAME <Text> {lastNameErrMsg}</Text>
-            </Text>
-            <View style={styles.personalInfoInputWrapper}>
-              <Feather
-                name="user"
-                size={Measurements.width * 0.07}
-                style={styles.inputIcon}
-              />
-              <TextInput
-                placeholder="Last Name"
-                style={styles.Input}
-                onChangeText={changeLastName}
               />
             </View>
           </View>
@@ -245,7 +186,7 @@ const ConfirmOrder = (props) => {
                 ...styles.personalInfoHeadingName,
                 color: phoneErrMsg ? 'red' : colors.primary,
               }}>
-              PHONE<Text> {phoneErrMsg}</Text>
+              PHONE NUMBER<Text> {phoneErrMsg}</Text>
             </Text>
             <View style={styles.personalInfoInputWrapper}>
               <Feather
@@ -284,6 +225,24 @@ const ConfirmOrder = (props) => {
             </View>
           </View>
         </View>
+        <View style={styles.bookingDetailsCenterOverlay}>
+          <TouchableOpacity
+            onPress={goBack}
+            style={styles.bookingDetailsWrapper}>
+            <ImageBackground
+              source={product.images}
+              style={styles.TileImage}
+              imageStyle={{borderRadius: 10}}
+              resizeMode="contain"
+            />
+            <View style={styles.DetailWrapper}>
+              <Text style={styles.ProductName}>{product.name}</Text>
+              <View style={styles.detailInner2}>
+                <Text style={styles.detailprice}>${product.price}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+        </View>
         <View style={styles.ConfirmButtonWrapper}>
           <Button
             title="CONFIRM ORDER"
@@ -300,15 +259,13 @@ const ConfirmOrder = (props) => {
           onBackdropPress={closeModal}
           animationType="fade">
           <View style={styles.ModalWrapper}>
-            <FontAwesome
-              name="check-circle"
+            <Entypo
+              name="game-controller"
               size={Measurements.width * 0.25}
               color={colors.primary}
             />
             <Text style={styles.ModalHeadText}>THANK YOU!</Text>
-            <Text style={styles.ModalSubText}>
-              Your Order has been confirmed
-            </Text>
+            <Text style={styles.ModalSubText}>We have Got your order!</Text>
           </View>
         </Overlay>
       </KeyboardAwareScrollView>
@@ -420,7 +377,8 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   personalInfoHeader: {
-    fontSize: 20,
+    textAlign: 'center',
+    fontSize: 23,
     fontWeight: 'bold',
   },
   personalInfoWrapper: {

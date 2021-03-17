@@ -1,8 +1,8 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import WrapperScreen from '../Resuables/WrapperScreen';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Measurements} from '../Resuables/Measurement';
 import {colors} from '../Resuables/frequentColors';
 import NavigationRef from '../Resuables/RefNavigation';
@@ -22,14 +22,14 @@ function MyFavourite(props) {
 
   return (
     <WrapperScreen style={{backgroundColor: colors.lightGrey4}}>
-      <KeyboardAwareScrollView style={styles.container}>
+      <View style={styles.container}>
         <MyHeader
           leftIcon={AntDesign}
           Title="FAVOURITES"
           leftIconName="arrowleft"
           leftIconAction={goBack}
         />
-        <View style={{marginVertical: Measurements.height * 0.015}}>
+        <View style={{marginVertical: Measurements.height * 0.015, flex: 1}}>
           {props.favourites.length > 0 && (
             <Loop
               horizontal={false}
@@ -43,7 +43,7 @@ function MyFavourite(props) {
             />
           )}
         </View>
-      </KeyboardAwareScrollView>
+      </View>
     </WrapperScreen>
   );
 }

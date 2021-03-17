@@ -12,7 +12,7 @@ import WrapperScreen from '../Resuables/WrapperScreen';
 import {colors} from '../Resuables/frequentColors';
 import {Measurements} from '../Resuables/Measurement';
 import {Avatar} from 'react-native-elements';
-import Data from '../dummyData';
+import Data2 from '../dummyData2';
 import Loop from '../Resuables/looping';
 import Entypo from 'react-native-vector-icons/Entypo';
 import RefNavigation from '../Resuables/RefNavigation';
@@ -21,19 +21,20 @@ import {setCurrentProductAction} from '../reduxStore/actions';
 import Image from 'react-native-fast-image';
 import Icon from '../pics/icon.jpg';
 import SearchBar from '../Resuables/searchingBar';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 function Home(props) {
   useEffect(() => {
-    changeTab(Data.catagory[0]);
+    changeTab(Data2.category[0]);
   }, []);
-  const [categories, setCategories] = useState(Data.catagory);
-  const [currentCat, setCurrentCat] = useState(Data.catagory[0]);
+  const [categories, setCategories] = useState(Data2.category);
+  const [currentCat, setCurrentCat] = useState(Data2.category[0]);
   const [tabProducts, setTabProducts] = useState([]);
 
   const changeTab = (tab) => {
     setCurrentCat(tab);
-    const filteredProducts = Data.product.filter(
-      (item) => item.catagoryId === tab.id,
+    const filteredProducts = Data2.product.filter(
+      (item) => item.categoryid === tab.id,
     );
     setTabProducts(filteredProducts);
   };
@@ -105,15 +106,13 @@ const Tabs = ({item, currentCat, changeTab}) => {
         style={{
           ...styles.tab1,
           backgroundColor:
-            item.catagoryName === currentCat.catagoryName
+            item.category === currentCat.category
               ? colors.primary
               : colors.secondary,
         }}>
         <Image
           source={
-            item.catagoryName === currentCat.catagoryName
-              ? item.iconsW
-              : item.iconsG
+            item.category === currentCat.category ? item.wicon : item.bicon
           }
           style={styles.tab2}
         />
@@ -122,16 +121,16 @@ const Tabs = ({item, currentCat, changeTab}) => {
         style={{
           ...styles.HomeTabsText,
           color:
-            item.catagoryName === currentCat.catagoryName
+            item.category === currentCat.category
               ? colors.primary
               : colors.primary,
-          opacity: item.catagoryName === currentCat.catagoryName ? 1 : 0.6,
+          opacity: item.category === currentCat.category ? 1 : 0.6,
           fontSize:
-            item.catagoryName === currentCat.catagoryName
+            item.category === currentCat.category
               ? Measurements.width * 0.045
               : Measurements.width * 0.04,
         }}>
-        {item.catagoryName}
+        {item.category}
       </Text>
     </TouchableOpacity>
   );
@@ -144,8 +143,25 @@ export const FilteredTile = ({item, GoToSingleProduct}) => {
       style={styles.FT_1}>
       <View style={styles.FT_2}>
         <View style={styles.FT_3}>
-          <Text style={styles.FT_4}>{item.productName}</Text>
-          <Text style={styles.FT_5}>{item.address}</Text>
+          <Text style={styles.FT_4}>{item.name}</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginVertical: Measurements.height * 0.015,
+              width: '100%',
+            }}>
+            <Text style={styles.FT_5}>
+              <AntDesign
+                name="star"
+                color="#ffce33"
+                size={Measurements.width * 0.04}
+              />
+              {item.rating}
+            </Text>
+            <Text style={styles.FT_5}>{item.type}</Text>
+          </View>
         </View>
         <Text style={styles.FT_6}>${item.price}</Text>
       </View>
@@ -189,12 +205,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   FT_5: {
-    width: Measurements.width * 0.5,
     color: colors.primary,
     fontSize: Measurements.width * 0.038,
     fontWeight: 'bold',
     opacity: 0.6,
-    marginVertical: Measurements.height * 0.015,
   },
   FT_4: {
     width: Measurements.width * 0.5,
@@ -238,10 +252,12 @@ const styles = StyleSheet.create({
     marginTop: Measurements.width * 0.05,
   },
   tab2: {
-    width: Measurements.width * 0.15,
-    height: Measurements.width * 0.15,
+    width: Measurements.width * 0.1,
+    height: Measurements.width * 0.1,
   },
   tab1: {
+    width: Measurements.width * 0.18,
+    height: Measurements.width * 0.18,
     padding: Measurements.width * 0.02,
     borderRadius: 15,
     elevation: 3,
@@ -252,6 +268,8 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   H_3: {
     textAlign: 'center',

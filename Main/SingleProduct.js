@@ -6,6 +6,7 @@ import {
   ImageBackground,
   StyleSheet,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import {Button} from 'react-native-elements';
 import {Measurements} from '../Resuables/Measurement';
@@ -51,50 +52,81 @@ function Booking(props) {
 
   return (
     <WrapperScreen style={{backgroundColor: colors.lightBackground2}}>
-      <View style={styles.pt_imgBackWrapper}>
-        <TouchableOpacity style={styles.crossWrapper} onPress={goBack}>
-          <AntDesign
-            name="arrowleft"
-            color="black"
-            size={Measurements.width * 0.07}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.hearWrapper} onPress={toggleFav}>
-          <Entypo
-            name={fav ? 'heart' : 'heart-outlined'}
-            size={Measurements.width * 0.07}
-            color={colors.primary}
-          />
-        </TouchableOpacity>
-        <ImageBackground
-          source={product.images}
-          style={styles.pt_imageBackground}
-          imageStyle={{width: '100%'}}
-          resizeMode="contain"
-        />
-      </View>
-      <View style={styles.PD_1}>
-        <View style={styles.detailWrapper}>
-          <View style={styles.PD_2}>
-            <View style={styles.PD_3}>
-              <Text style={styles.PD_4}>{product.productName}</Text>
-              <Text style={styles.PD_5}>${product.price}</Text>
-            </View>
-            <Text style={styles.PD_6}>{product.address}</Text>
-          </View>
-          <Text style={styles.PD_11}>{product.dis}</Text>
-          <View style={styles.PD_12}>
-            <Button
-              raised
-              title="PURCHASE NOW"
-              buttonStyle={styles.confirmButton}
-              containerStyle={{width: '100%'}}
-              titleStyle={styles.buttonText}
-              onPress={proceedToBookings}
+      <ScrollView>
+        <View style={styles.pt_imgBackWrapper}>
+          <TouchableOpacity style={styles.crossWrapper} onPress={goBack}>
+            <AntDesign
+              name="arrowleft"
+              color="black"
+              size={Measurements.width * 0.07}
             />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.hearWrapper} onPress={toggleFav}>
+            <Entypo
+              name={fav ? 'heart' : 'heart-outlined'}
+              size={Measurements.width * 0.07}
+              color={colors.primary}
+            />
+          </TouchableOpacity>
+          <ImageBackground
+            source={product.images}
+            style={styles.pt_imageBackground}
+            imageStyle={{width: '100%'}}
+            resizeMode="contain"
+          />
+        </View>
+        <View style={styles.PD_1}>
+          <View style={styles.detailWrapper}>
+            <View style={styles.PD_2}>
+              <View style={styles.PD_3}>
+                <Text style={styles.PD_4}>{product.name}</Text>
+                <Text style={styles.PD_5}>${product.price}</Text>
+              </View>
+
+              <View style={styles.PD_6}>
+                <Text
+                  style={{
+                    color: colors.primary,
+                    fontSize: Measurements.width * 0.038,
+                    fontWeight: 'bold',
+                    opacity: 0.6,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <AntDesign
+                    name="star"
+                    color="#ffce33"
+                    size={Measurements.width * 0.04}
+                  />
+                  {product.rating}
+                </Text>
+                <Text
+                  style={{
+                    color: colors.primary,
+                    fontSize: Measurements.width * 0.038,
+                    fontWeight: 'bold',
+                    opacity: 0.6,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  Type: {product.type}
+                </Text>
+              </View>
+            </View>
+            <Text style={styles.PD_11}>{product.description}</Text>
+            <View style={styles.PD_12}>
+              <Button
+                raised
+                title="PURCHASE NOW"
+                buttonStyle={styles.confirmButton}
+                containerStyle={{width: '100%', marginBottom: 0}}
+                titleStyle={styles.buttonText}
+                onPress={proceedToBookings}
+              />
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </WrapperScreen>
   );
 }
@@ -139,6 +171,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondary,
     paddingHorizontal: Measurements.width * 0.02,
     paddingVertical: Measurements.height * 0.007,
+    marginVertical: 10,
   },
   PD_10: {},
   PD_9: {},
@@ -146,10 +179,9 @@ const styles = StyleSheet.create({
   PD_7: {},
   PD_6: {
     marginTop: Measurements.height * 0.01,
-    color: colors.primary,
-    fontSize: Measurements.width * 0.038,
-    fontWeight: 'bold',
-    opacity: 0.6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   PD_5: {
     fontSize: Measurements.width * 0.055,
@@ -185,7 +217,7 @@ const styles = StyleSheet.create({
   },
   PD_1: {
     position: 'relative',
-    height: '50%',
+    // height: '50%',
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
   },
@@ -214,7 +246,7 @@ const styles = StyleSheet.create({
     zIndex: 5,
   },
   detailWrapper: {
-    height: '90%',
+    // height: '90%',
     paddingHorizontal: Measurements.width * 0.045,
     paddingBottom: Measurements.height * 0.02,
     backgroundColor: colors.secondary,
@@ -222,7 +254,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     marginTop: '10%',
   },
   pt_imgBackWrapper: {
@@ -230,7 +262,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    height: '50%',
+    height: Measurements.height * 0.5,
   },
   pt_imageBackground: {
     width: '90%',

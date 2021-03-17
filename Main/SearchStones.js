@@ -5,7 +5,7 @@ import WrapperScreen from '../Resuables/WrapperScreen';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import SearchBar from '../Resuables/searchingBar';
-import Data from '../dummyData';
+import Data2 from '../dummyData2';
 import {Measurements} from '../Resuables/Measurement';
 import {colors} from '../Resuables/frequentColors';
 import NavigationRef from '../Resuables/RefNavigation';
@@ -15,13 +15,13 @@ import {setCurrentProductAction} from '../reduxStore/actions';
 
 function Search(props) {
   useEffect(() => {
-    // RenderTiles(Data.catagory);
+    // RenderTiles(Data2.catagory);
   }, []);
   const [searchText, setSearchText] = useState('');
 
   const RenderSearchedResult = () => {
-    var SearchedItems = Data.product.filter((item) =>
-      item.productName.toLowerCase().includes(searchText.toLowerCase()),
+    var SearchedItems = Data2.product.filter((item) =>
+      item.name.toLowerCase().includes(searchText.toLowerCase()),
     );
     return SearchedItems.length === 0 ? (
       <Text style={{fontWeight: 'bold'}}>No Stones Found...</Text>
@@ -66,7 +66,7 @@ function Search(props) {
         <View style={styles.TilesWrapper}>
           {searchText !== ''
             ? RenderSearchedResult()
-            : RenderTiles(Data.product)}
+            : RenderTiles(Data2.product)}
         </View>
       </KeyboardAwareScrollView>
     </WrapperScreen>
