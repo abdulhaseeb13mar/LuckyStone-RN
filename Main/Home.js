@@ -19,7 +19,7 @@ import RefNavigation from '../Resuables/RefNavigation';
 import {connect} from 'react-redux';
 import {setCurrentProductAction} from '../reduxStore/actions';
 import Image from 'react-native-fast-image';
-import Icon from '../pics/icon.jpg';
+import Icon from '../pics/icon.png';
 import SearchBar from '../Resuables/searchingBar';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     height: Measurements.height * 0.158,
   },
   FT_7: {
-    backgroundColor: colors.lightBackground2,
+    backgroundColor: `rgba(${colors.rgb_primary},0.4)`,
     borderRadius: 11,
     position: 'absolute',
     height: '100%',
@@ -215,7 +215,6 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontSize: 22,
     fontWeight: 'bold',
-    fontFamily: 'Didot-Bold',
   },
   FT_3: {
     width: Measurements.width * 0.5,
