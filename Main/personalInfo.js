@@ -219,7 +219,6 @@ const ConfirmOrder = (props) => {
               <TextInput
                 placeholder="Address"
                 style={styles.Input}
-                multiline={true}
                 onChangeText={changeAddress}
               />
             </View>
