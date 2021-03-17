@@ -74,7 +74,7 @@ const ConfirmOrder = (props) => {
             phonenumber: phone,
             address: address,
             email: email,
-            appname: 'Ball Collection',
+            appname: 'Precious Stone',
           }),
         },
       );
